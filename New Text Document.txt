@@ -1,0 +1,33 @@
+' Path to nircmd.exe
+Dim nircmdPath
+nircmdPath = "C:\Users\Admin\Downloads\nircmd-x64\nircmd.exe" ' Ensure this path is correct
+
+' Create WshShell object
+Dim objShell
+Set objShell = CreateObject("WScript.Shell")
+
+' Open log file
+Dim fso, logFile
+Set fso = CreateObject("Scripting.FileSystemObject")
+Set logFile = fso.OpenTextFile("C:\Users\Admin\Downloads\nircmd-x64\log.txt", 8, True)
+
+' Infinite loop to click mouse every 5 seconds
+Do
+    On Error Resume Next
+    ' Log the action
+    logFile.WriteLine Now & " - Clicking mouse"
+
+    ' Execute nircmd to simulate mouse left click at current pointer location
+    objShell.Run nircmdPath & " sendmouse left click", 0, False
+    If Err.Number <> 0 Then
+        logFile.WriteLine "Error: " & Err.Description
+        Err.Clear
+    End If
+    On Error GoTo 0
+
+    ' Wait for 5 seconds
+    WScript.Sleep 5000
+Loop
+
+' Close log file
+logFile.Close
